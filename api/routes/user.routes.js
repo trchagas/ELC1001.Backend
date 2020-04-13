@@ -7,5 +7,4 @@ module.exports = (app) => {
 
     // Auth required
     app.get('/api/v1/user/me', user.getInfo);
-    app.post('/users/me/logout', user.logout);
 }
