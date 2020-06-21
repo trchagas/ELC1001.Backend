@@ -1,3 +1,4 @@
+const Look = require('../models/look.model')
 const Calendar = require('../models/calendar.model');
 
 // Dica: você pode usar req.user para acessar informações do usuário que está fazendo a request.
@@ -11,18 +12,18 @@ exports.getLook = async (req, res) => {
         // o resultado da busca. Use apenas o dia (e.g. 31/12/2000).
         const look = await Look.findOne(
             {
-                "day":   req.params.day.getDate(),
-                "shift": req.params.shift
+                "day":   req.body.date.getHours(),
+                "shift": req.body.shift,
             }
         );
 
         // Se não houver look neste dia, retorne null.
         if(!look){
-            return null;
+            return res.json(look);
         }
         
         // Pesquise qual deve ser o código de retorno HTTP quando a requisição foi bem sucedida.
-        return res.json(look);
+        return res.status(200).send(look);
     }
     catch(err) {
         console.error(err, err.message, err.stack);
@@ -45,8 +46,8 @@ exports.setLook = async (req, res) => {
         // ou não fique salva no banco. Use apenas o dia (e.g. 31/12/2000).
         let look = await Look.findOne(
             {
-                "day":   req.user.params.day.getDate(),
-                "shift": req.user.params.shift
+                "day":   req.body.date.getHours(),
+                "shift": req.body.shift,
             }
         );
 
@@ -54,23 +55,23 @@ exports.setLook = async (req, res) => {
         if(!look){
             look = await Look.create(
                 {
-                    "id":    req.user.params.id,
-                    "day":   req.user.params.day.getDate(),
-                    "shift": req.user.params.shift
+                    "id":    req.body.id,
+                    "day":   req.body.date.getHours(),
+                    "shift": req.body.shift,
                 }
             );
         } else {
             look = await Look.update(
                 {
-                    "id":    req.user.params.id,
-                    "day":   req.user.params.day.getDate(),
-                    "shift": req.user.params.shift
+                    "id":    req.body.id,
+                    "day":   req.body.date.getHours(),
+                    "shift": req.body.shift,
                 }
             );
         }
         
         // Pesquise qual deve ser o código de retorno HTTP quando a requisição foi bem sucedida.
-        return res.json(look);
+        return res.status(200).send(look);
     }
     catch(err) {
         console.error(err, err.message, err.stack);
