@@ -10,9 +10,12 @@ exports.getLook = async (req, res) => {
 
         // Preste atenção para padronizar o dia recebido de forma que a hora não influencie
         // o resultado da busca. Use apenas o dia (e.g. 31/12/2000).
+        const providedDate = new Date(req.body.date);
+        const formatedDate = new Date(providedDate.getYear(), providedDate.getMonth(), providedDate.getDate(), 0, 0, 0, 0);
+
         const look = await Look.findOne(
             {
-                "day":   req.body.date.getHours(),
+                "day":   formatedDate.getTime(),
                 "shift": req.body.shift,
             }
         );
@@ -44,9 +47,12 @@ exports.setLook = async (req, res) => {
 
         // Preste atenção para padronizar o dia recebido de forma que a hora não influencie
         // ou não fique salva no banco. Use apenas o dia (e.g. 31/12/2000).
+        const providedDate = new Date(req.body.date);
+        const formatedDate = new Date(providedDate.getYear(), providedDate.getMonth(), providedDate.getDate(), 0, 0, 0, 0);
+
         let look = await Look.findOne(
             {
-                "day":   req.body.date.getHours(),
+                "day":   formatedDate.getTime(),
                 "shift": req.body.shift,
             }
         );
@@ -56,7 +62,7 @@ exports.setLook = async (req, res) => {
             look = await Look.create(
                 {
                     "id":    req.body.id,
-                    "day":   req.body.date.getHours(),
+                    "day":   formatedDate.getTime(),
                     "shift": req.body.shift,
                 }
             );
@@ -64,7 +70,7 @@ exports.setLook = async (req, res) => {
             look = await Look.update(
                 {
                     "id":    req.body.id,
-                    "day":   req.body.date.getHours(),
+                    "day":   formatedDate.getTime(),
                     "shift": req.body.shift,
                 }
             );
